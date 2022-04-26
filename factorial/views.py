@@ -1,11 +1,18 @@
 import math
-from django.http import HttpResponse
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
-def index(request, num):
+@api_view(['GET'])
+def index(request, input):
+    try:
+        num = int(input)
+    except ValueError:
+        return Response("Error: Invalid number!", status=status.HTTP_400_BAD_REQUEST)
+
+    if num < 0:
+        return Response("Error: Invalid number!", status=status.HTTP_400_BAD_REQUEST)
+
     result = math.factorial(num)
-    return HttpResponse(result)
-
-
-def error(request, input):
-    return HttpResponse("Please enter a valid number!")
+    return Response(result)
